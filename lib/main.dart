@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:workouttraker/controller/logincontroller.dart';
 import 'package:workouttraker/controller/profiledrawer.dart';
 import 'package:workouttraker/controller/taskaddcontroller.dart';
+import 'package:workouttraker/controller/taskupdatecontroller.dart';
 import 'package:workouttraker/controller/taskviewcontroller.dart';
 import 'package:workouttraker/function/db_functions.dart';
 import 'package:workouttraker/model/person_model/persondata.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => Taskaddingprovider()),
         ChangeNotifierProvider(create: (context) =>Profileeditprovider()),
         ChangeNotifierProvider(create: (context) =>Taskviewprovider()),
+        ChangeNotifierProvider(create: (context) =>TaskEditProvider()),
     ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,

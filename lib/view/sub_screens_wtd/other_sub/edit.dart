@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:workouttraker/function/db_functions.dart';
 import 'package:workouttraker/helpers/appcolors..dart';
 import 'package:workouttraker/model/task_model/workoutmodel1.dart';
+
+import '../../../controller/taskupdatecontroller.dart';
 
 class UpdateScreen extends StatefulWidget {
   final String typename;
@@ -13,7 +16,7 @@ class UpdateScreen extends StatefulWidget {
   final int index;
   final DateTime date;
   final String duration;
-  final bool isChecked; 
+  final bool isChecked;
 
   const UpdateScreen({
     Key? key,
@@ -24,7 +27,7 @@ class UpdateScreen extends StatefulWidget {
     required this.date,
     required this.duration,
     required this.reps,
-    required this.isChecked, 
+    required this.isChecked,
   }) : super(key: key);
 
   @override
@@ -33,26 +36,20 @@ class UpdateScreen extends StatefulWidget {
 
 class _UpdateScreenState extends State<UpdateScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _typenameController = TextEditingController();
-  final _weightController = TextEditingController();
-  final _setsController = TextEditingController();
-  final _repsController = TextEditingController();
   final _dateController = TextEditingController();
-  final _dropdownController = TextEditingController();
   String _selectedValue = 'Day';
 
   @override
   void initState() {
     super.initState();
-    _typenameController.text = widget.typename;
-    _weightController.text = widget.weight;
-    _setsController.text = widget.sets;
-    _repsController.text = widget.reps; 
+    final edittask = Provider.of<TaskEditProvider>(context, listen: false);
+    edittask.typenameController.text = widget.typename;
+    edittask.weightController.text = widget.weight;
+    edittask.setsController.text = widget.sets;
+    edittask.repsController.text = widget.reps;
     _dateController.text = DateFormat('yyyy-MM-dd').format(widget.date);
-    _dropdownController.text = widget.duration;
-    // _isChecked = widget.isChecked;
+    edittask.durationController.text = widget.duration;
   }
-  
 
   Future<void> _selectDate() async {
     DateTime? picked = await showDatePicker(
@@ -67,20 +64,23 @@ class _UpdateScreenState extends State<UpdateScreen> {
       });
     }
   }
+
   String? _validateTextField(String? value) {
     if (value == null || value.isEmpty) {
       return 'This field is required';
     }
     return null;
   }
+
   @override
   Widget build(BuildContext context) {
+    final edittask = Provider.of<TaskEditProvider>(context);
+
     return Scaffold(
       appBar: AppBar(backgroundColor: colors.primarytheme),
       body: AlertDialog(
         backgroundColor: colors.primarytheme,
         title: const Text('Update Task'),
-
         content: SizedBox(
           height: 380,
           child: SingleChildScrollView(
@@ -89,7 +89,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
               child: Column(
                 children: [
                   TextFormField(
-                    controller: _typenameController,
+                    controller: edittask.typenameController,
                     keyboardType: TextInputType.name,
                     decoration: InputDecoration(
                       hintText: 'TYPE NAME',
@@ -101,10 +101,11 @@ class _UpdateScreenState extends State<UpdateScreen> {
                       ),
                     ),
                     validator: _validateTextField,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
-                    controller: _weightController,
+                    controller: edittask.weightController,
                     maxLength: 3,
                     inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
                     keyboardType: TextInputType.number,
@@ -118,11 +119,12 @@ class _UpdateScreenState extends State<UpdateScreen> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
-                      validator: _validateTextField,
+                    validator: _validateTextField,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
-                  const SizedBox(height: 16),
+                     const SizedBox(height: 16),
                   TextFormField(
-                    controller: _setsController,
+                    controller: edittask.setsController,
                     maxLength: 3,
                     inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
                     keyboardType: TextInputType.number,
@@ -136,11 +138,11 @@ class _UpdateScreenState extends State<UpdateScreen> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
-                      validator: _validateTextField,
+                    validator: _validateTextField,
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
-                    controller: _repsController,
+                    controller: edittask.repsController,
                     maxLength: 3,
                     inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
                     keyboardType: TextInputType.number,
@@ -154,13 +156,12 @@ class _UpdateScreenState extends State<UpdateScreen> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
-                      validator: _validateTextField,
+                    validator: _validateTextField,
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
                     controller: _dateController,
                     decoration: InputDecoration(
-                      // labelText: 'Date',
                       filled: true,
                       prefixIcon: const Icon(Icons.calendar_today),
                       fillColor: colors.whitetheme,
@@ -171,7 +172,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                     ),
                     readOnly: true,
                     onTap: _selectDate,
-                      validator: _validateTextField,
+                    validator: _validateTextField,
                   ),
                   const SizedBox(height: 16),
                   Container(
@@ -188,7 +189,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                           alignment: Alignment.bottomCenter,
                           padding: const EdgeInsetsDirectional.all(3),
                           borderRadius: BorderRadius.circular(15),
-                          value: _dropdownController.text,
+                          value: edittask.durationController.text,
                           items: <String>['Day', 'Week', 'Month']
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
@@ -202,13 +203,13 @@ class _UpdateScreenState extends State<UpdateScreen> {
                           onChanged: (String? newValue) {
                             setState(() {
                               _selectedValue = newValue!;
-                              _dropdownController.text = _selectedValue;
+                              edittask.durationController.text = _selectedValue;
                             });
                           },
                         ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -217,24 +218,21 @@ class _UpdateScreenState extends State<UpdateScreen> {
         actions: [
           MaterialButton(
             onPressed: () {
-               if (_formKey.currentState!.validate()){
-                  //  print('Updating task at index: ${widget.index}');
-              Workoutmodel studentmodel = Workoutmodel(
-                id: widget.index,
-                typename: _typenameController.text,
-                weight: _weightController.text,
-                sets: _repsController.text,
-                reps: _setsController.text,
-                // sets: _setsController.text,
-                date: DateTime.parse(_dateController.text),
-                duration: _dropdownController.text,
-                // isChecked: widget.isChecked,
-               // isChecked: isChecked, 
-              );
+              if (_formKey.currentState!.validate()) {
+                Workoutmodel studentmodel = Workoutmodel(
+                  id: widget.index,
+                  typename: edittask.typenameController.text,
+                  weight: edittask.weightController.text,
+                  sets: edittask.repsController.text,
+                  reps: edittask.setsController.text,
+                  date: DateTime.parse(_dateController.text),
+                  duration: edittask.durationController.text,
+                );
 
-              updateTask(widget.index, studentmodel);
-              Navigator.pop(context);
-            }},
+                updateTask(widget.index, studentmodel);
+                Navigator.pop(context);
+              }
+            },
             color: Colors.white,
             child: const Text('UPDATE'),
           )
