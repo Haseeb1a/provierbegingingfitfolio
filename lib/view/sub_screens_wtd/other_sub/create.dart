@@ -198,6 +198,7 @@ class _TextngState extends State<Textng> {
             onPressed: () {
               addtask.onAddTaskButtonPressed(context);
               addtask.typenameController.clear();
+              addtask.weightController.clear();
               addtask.dateController.clear();
               addtask.setsController.clear();
               addtask.repsController.clear();

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
+import 'package:workouttraker/controller/taskviewcontroller.dart';
 import 'package:workouttraker/function/db_functions.dart';
 import 'package:workouttraker/helpers/appcolors..dart';
 import 'package:workouttraker/model/task_model/workoutmodel1.dart';
@@ -16,36 +18,37 @@ class Task extends StatefulWidget {
 }
 
 class _TaskState extends State<Task> {
-  final TextEditingController _searchController = TextEditingController();
-  List<Workoutmodel> filteredTasks = [];
-  bool isSearching =false;
+  // final TextEditingController _searchController = TextEditingController();
+  // List<Workoutmodel> filteredTasks = [];
+  // bool isSearching =false;
 
   @override
-  void initState() {
-    super.initState();
-    _searchController.addListener(_onSearchChanged);
-  }
+  // void initState() {
+  //   super.initState();
+  //   _searchController.addListener(_onSearchChanged);
+  // }
 
-  void _onSearchChanged() {
-  setState(() {
-    if (_searchController.text.isEmpty) {
-      isSearching = false;
-      filteredTasks.clear();
+//   void _onSearchChanged() {
+//   setState(() {
+//     if (_searchController.text.isEmpty) {
+//       isSearching = false;
+//       filteredTasks.clear();
     
-    } else {
-      isSearching = true;
-      filteredTasks = workoutListNotifier.value
+//     } else {
+//       isSearching = true;
+//       filteredTasks = workoutListNotifier.value
      
-          .where((task) =>
-              task.typename
-                  .toLowerCase()
-                  .contains(_searchController.text.toLowerCase()))
-          .toList();
-    }
-  });
-}
+//           .where((task) =>
+//               task.typename
+//                   .toLowerCase()
+//                   .contains(_searchController.text.toLowerCase()))
+//           .toList();
+//     }
+//   });
+// }
   @override
   Widget build(BuildContext context) {
+     final searchProvider = Provider.of<Taskviewprovider>(context);
    workoutListNotifier.notifyListeners();
 
     double screenWidth = MediaQuery.of(context).size.width;
@@ -58,14 +61,14 @@ class _TaskState extends State<Task> {
           width: double.infinity,
           padding: const EdgeInsets.only( left: 10, right: 10),
           child: TextField(
-            controller: _searchController,
+            controller: searchProvider.searchController,
             decoration: InputDecoration(
               hintText: 'Search....',
               prefixIcon: const Icon(Icons.search),
               suffixIcon:  IconButton(
             onPressed: () {
               
-              _searchController.clear();
+             searchProvider.searchController.clear();
             },
             icon: const Icon(Icons.clear),
           ),
@@ -94,8 +97,9 @@ class _TaskState extends State<Task> {
               builder:
                   (BuildContext ctx, List<Workoutmodel> workoutlist, Widget? child) {
                     
-                List<Workoutmodel> tasksToDisplay =
-                    isSearching ? filteredTasks : workoutlist;
+                 List<Workoutmodel> tasksToDisplay = searchProvider.isSearching
+        ? searchProvider.filteredTasks
+        : workoutListNotifier.value;
 
                 if (workoutlist.isEmpty) {
                   return Center(
@@ -173,8 +177,8 @@ class _TaskState extends State<Task> {
                               );
                             },
                             icon: Icons.edit,
-                            backgroundColor:const Color.fromARGB(255, 255, 230, 189),
-                            foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                            backgroundColor:colors.secondarytheme,
+                            foregroundColor: colors.darktheme,
                           ),
                         ]),
                         child: SizedBox(
