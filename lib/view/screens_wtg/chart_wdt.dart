@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:workouttraker/helpers/appcolors..dart';
 import 'package:workouttraker/utility/chartfunction.dart';
 
 import '../../controller/chartcontroller.dart';
@@ -16,10 +17,10 @@ class Chart extends StatelessWidget {
             appBar: AppBar(
               automaticallyImplyLeading: false,
               title: Text('Chart'),
-              backgroundColor: const Color.fromARGB(225, 27, 57, 61),
+              backgroundColor: colors.primarytheme,
             ),
             body: Card(
-              color: const Color.fromARGB(255, 255, 255, 255),
+              color: colors.whitetheme,
               child: AspectRatio(
                 aspectRatio: 1.1,
                 child: Column(
@@ -44,7 +45,7 @@ class Chart extends StatelessWidget {
                                   children: [
                                     const Icon(Icons.list_alt_outlined,
                                         size: 25,
-                                        color: Color.fromARGB(225, 27, 57, 61)),
+                                        color: colors.primarytheme),
                                     Text(
                                         'Totaltask ${chartData.selectedValue == 'Day' ? chartData.daytotal : chartData.selectedValue == 'Week' ? chartData.weektotal : chartData.selectedValue == 'Month' ? chartData.monthtotal : 0}'),
                                   ],
@@ -73,18 +74,18 @@ class Chart extends StatelessWidget {
                           elevation: 10,
                           underline: Container(
                             height: 2,
-                            color: const Color.fromARGB(255, 255, 255, 255),
+                            color:  colors.whitetheme,
                           ),
-                          dropdownColor: const Color.fromARGB(255, 255, 255, 255),
-                          focusColor: const Color.fromARGB(255, 255, 255, 255),
+                          dropdownColor:  colors.whitetheme,
+                          focusColor:  colors.whitetheme,
                           alignment: Alignment.bottomCenter,
                           padding: const EdgeInsetsDirectional.all(3),
                           icon: const Icon(Icons.arrow_drop_down,
-                              color: Color.fromARGB(225, 27, 57, 61)),
+                              color: colors.primarytheme),
                           borderRadius: BorderRadius.circular(15),
                           value: chartData.selectedValue,
                           style: const TextStyle(
-                              color: Color.fromARGB(255, 255, 255, 255)),
+                              color: colors.whitetheme),
                           items: <String>['Day', 'Week', 'Month']
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
@@ -93,7 +94,7 @@ class Chart extends StatelessWidget {
                                 value,
                                 style: const TextStyle(
                                     fontSize: 15,
-                                    color: Color.fromARGB(255, 0, 0, 0),
+                                    color: Colors.black,
                                     fontFamily: AutofillHints.username),
                               ),
                             );
