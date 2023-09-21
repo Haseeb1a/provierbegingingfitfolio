@@ -35,10 +35,6 @@ class UpdateScreen extends StatefulWidget {
 }
 
 class _UpdateScreenState extends State<UpdateScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _dateController = TextEditingController();
-  String _selectedValue = 'Day';
-
   @override
   void initState() {
     super.initState();
@@ -47,29 +43,8 @@ class _UpdateScreenState extends State<UpdateScreen> {
     edittask.weightController.text = widget.weight;
     edittask.setsController.text = widget.sets;
     edittask.repsController.text = widget.reps;
-    _dateController.text = DateFormat('yyyy-MM-dd').format(widget.date);
+    edittask.dateController.text = DateFormat('yyyy-MM-dd').format(widget.date);
     edittask.durationController.text = widget.duration;
-  }
-
-  Future<void> _selectDate() async {
-    DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: widget.date,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-    if (picked != null) {
-      setState(() {
-        _dateController.text = DateFormat('yyyy-MM-dd').format(picked);
-      });
-    }
-  }
-
-  String? _validateTextField(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'This field is required';
-    }
-    return null;
   }
 
   @override
@@ -85,7 +60,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
           height: 380,
           child: SingleChildScrollView(
             child: Form(
-              key: _formKey,
+              key: edittask.formKey,
               child: Column(
                 children: [
                   TextFormField(
@@ -100,7 +75,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
-                    validator: _validateTextField,
+                    validator: edittask.validateTextField,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
                   const SizedBox(height: 16),
@@ -119,10 +94,10 @@ class _UpdateScreenState extends State<UpdateScreen> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
-                    validator: _validateTextField,
+                    validator: edittask.validateTextField,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
-                     const SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextFormField(
                     controller: edittask.setsController,
                     maxLength: 3,
@@ -138,7 +113,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
-                    validator: _validateTextField,
+                    validator: edittask.validateTextField,
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
@@ -156,11 +131,11 @@ class _UpdateScreenState extends State<UpdateScreen> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
-                    validator: _validateTextField,
+                    validator: edittask.validateTextField,
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
-                    controller: _dateController,
+                    controller: edittask.dateController,
                     decoration: InputDecoration(
                       filled: true,
                       prefixIcon: const Icon(Icons.calendar_today),
@@ -171,8 +146,10 @@ class _UpdateScreenState extends State<UpdateScreen> {
                       ),
                     ),
                     readOnly: true,
-                    onTap: _selectDate,
-                    validator: _validateTextField,
+                    onTap: () {
+                      edittask.selectDate(context); // Removed the extra semicolon
+                    },
+                    validator: edittask.validateTextField,
                   ),
                   const SizedBox(height: 16),
                   Container(
@@ -202,8 +179,8 @@ class _UpdateScreenState extends State<UpdateScreen> {
                           }).toList(),
                           onChanged: (String? newValue) {
                             setState(() {
-                              _selectedValue = newValue!;
-                              edittask.durationController.text = _selectedValue;
+                              edittask.selectedValue = newValue!;
+                              edittask.durationController.text = edittask.selectedValue;
                             });
                           },
                         ),
@@ -218,14 +195,14 @@ class _UpdateScreenState extends State<UpdateScreen> {
         actions: [
           MaterialButton(
             onPressed: () {
-              if (_formKey.currentState!.validate()) {
+              if (edittask.formKey.currentState!.validate()) {
                 Workoutmodel studentmodel = Workoutmodel(
                   id: widget.index,
                   typename: edittask.typenameController.text,
                   weight: edittask.weightController.text,
                   sets: edittask.repsController.text,
                   reps: edittask.setsController.text,
-                  date: DateTime.parse(_dateController.text),
+                  date: DateTime.parse(edittask.dateController.text),
                   duration: edittask.durationController.text,
                 );
 

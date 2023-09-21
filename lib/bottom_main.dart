@@ -18,8 +18,7 @@ class _ScreeenHomeState extends State<ScreeenHome> {
  final _pages=[
    const HomeScreen(),
     Chart(
-    checkboxStatus: false, // Set the default value here
-    currentDate: DateTime.now(),
+
   ),
   const Task(),
   const Settings(),

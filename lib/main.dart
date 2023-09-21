@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:workouttraker/controller/chartcontroller.dart';
 import 'package:workouttraker/controller/logincontroller.dart';
 import 'package:workouttraker/controller/profiledrawer.dart';
 import 'package:workouttraker/controller/taskaddcontroller.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) =>Profileeditprovider()),
         ChangeNotifierProvider(create: (context) =>Taskviewprovider()),
         ChangeNotifierProvider(create: (context) =>TaskEditProvider()),
+        ChangeNotifierProvider(create: (context) =>ChartData()),
     ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -56,12 +56,7 @@ void initState() {
 
   profileEditProvider.loadProfileImage();
 }
-  String? _validateTextField(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'This field is required';
-    }
-    return null;
-  }
+
   
   
   
@@ -105,7 +100,7 @@ void initState() {
                             borderRadius: BorderRadius.circular(15),
                           ),
                         ),
-                        validator: _validateTextField,
+                        validator: profileEditProvider.validateTextField,
                       ),
                     ),
                     const SizedBox(
@@ -129,7 +124,7 @@ void initState() {
                             borderRadius: BorderRadius.circular(15),
                           ),
                         ),
-                            validator: _validateTextField,
+                            validator: profileEditProvider.validateTextField,
                       ),
                     ),
                     const SizedBox(
@@ -152,7 +147,7 @@ void initState() {
                             borderRadius: BorderRadius.circular(15),
                           ),
                         ),
-                            validator: _validateTextField,
+                            validator: profileEditProvider.validateTextField,
                       ),
                       
                     ),
@@ -175,7 +170,7 @@ void initState() {
                             borderRadius: BorderRadius.circular(15),
                           ),
                         ),
-                            validator: _validateTextField,
+                            validator: profileEditProvider.validateTextField,
                       ),
                     ),
                     const SizedBox(

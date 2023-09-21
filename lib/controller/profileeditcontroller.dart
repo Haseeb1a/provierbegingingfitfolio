@@ -39,6 +39,12 @@ final formKey = GlobalKey<FormState>();
     _profileImagePath = imagePath;
     notifyListeners(); // Notify listeners after updating the data
   }
+    String? validateTextField(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'This field is required';
+    }
+    return null;
+  }
 
 
 }
