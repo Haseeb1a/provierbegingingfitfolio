@@ -10,18 +10,10 @@ import 'package:workouttraker/view/sub_screens_wtd/other_sub/edit.dart';
 import 'package:workouttraker/utility/utilitycolor.dart';
 import 'package:lottie/lottie.dart';
 
-class Task extends StatefulWidget {
+class Task extends StatelessWidget {
   const Task({Key? key}) : super(key: key);
 
-  @override
-  State<Task> createState() => _TaskState();
-}
-
-class _TaskState extends State<Task> {
   // final TextEditingController _searchController = TextEditingController();
-  // List<Workoutmodel> filteredTasks = [];
-  // bool isSearching =false;
-
   @override
   // void initState() {
   //   super.initState();
@@ -142,11 +134,10 @@ class _TaskState extends State<Task> {
                                           "OK",
                                           style: TextStyle(color:colors.whitetheme),
                                         ),
-                                        onPressed: () {
+                                          onPressed: () {
                                           Navigator.of(context).pop(true);
                                           deleteTask(index);
-                                          _showSnackbardelete(data.typename);
-                                          
+                                          _showSnackbardelete(context, data.typename);
                                         },
                                       ),
                                     ],
@@ -212,22 +203,20 @@ class _TaskState extends State<Task> {
                                           data.typename,
                                           style: TextStyle(fontSize: screenWidth * 0.06),
                                         ),
-                                        Checkbox(
-                                          value: data.isChecked,
-                                          onChanged: (bool? newValue) {
-                                            setState(() {
-                                              data.isChecked = newValue ?? true;
-                                            });
+                                     Checkbox(
+  value: data.isChecked,
+  onChanged: (bool? newValue) {
+    searchProvider.updateTaskCompletion(index, newValue ?? true);
 
-                                            updateTask(index, data);
+    updateTask(index, data);
 
-                                            if (data.isChecked) {
+ if (data.isChecked) {
                                               Future.delayed(const Duration(milliseconds: 180), () {
-                                                _showSnackbar(' ${data.typename}');
+                                                _showSnackbar(context, ' ${data.typename}');
                                               });
                                             }
-                                          },
-                                        ),
+  },
+),
                                       ],
                                     ),
                                   ),
@@ -329,38 +318,40 @@ class _TaskState extends State<Task> {
       ),
     );
   }
-  void _showSnackbar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: colors.whitetheme,
-        content: Row(
-          children: [
-            const Icon(Icons.check_circle_rounded, color: Colors.green),
-            Text(
-              ' $message task is completed.!',
-              style: const TextStyle(color: Colors.black),
-            ),
-          ],
+
+    void _showSnackbar(BuildContext context, String message) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: colors.whitetheme,
+          content: Row(
+            children: [
+              const Icon(Icons.check_circle_rounded, color: Colors.green),
+              Text(
+                ' $message task is completed.!',
+                style: const TextStyle(color: Colors.black),
+              ),
+            ],
+          ),
+          duration: const Duration(seconds: 2), // Adjust the duration as needed
         ),
-        duration: const Duration(seconds: 2), // Adjust the duration as needed
-      ),
-    );
-  }
-    void _showSnackbardelete(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
-        content: Row(
-          children: [
-            const Icon(Icons.delete_forever_rounded, color: Colors.red),
-            Text(
-              ' $message task is deleted',
-              style: const TextStyle(color:colors.whitetheme),
-            ),
-          ],
+      );
+    }
+
+    void _showSnackbardelete(BuildContext context, String message) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+          content: Row(
+            children: [
+              const Icon(Icons.delete_forever_rounded, color: Colors.red),
+              Text(
+                ' $message task is deleted',
+                style: const TextStyle(color: colors.whitetheme),
+              ),
+            ],
+          ),
+          duration: const Duration(seconds: 2), // Adjust the duration as needed
         ),
-        duration: const Duration(seconds: 2), // Adjust the duration as needed
-      ),
-    );
-  }
+      );
+    }
 }

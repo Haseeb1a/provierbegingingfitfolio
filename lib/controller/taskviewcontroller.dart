@@ -32,11 +32,12 @@ class Taskviewprovider extends ChangeNotifier {
     filteredTasks.clear();
     notifyListeners();
   }
- void toggleTaskCompletion(int taskIndex, bool newValue) {
-    if (taskIndex >= 0 && taskIndex < filteredTasks.length) {
-      filteredTasks[taskIndex].isChecked = newValue;
+ void updateTaskCompletion(int index, bool newValue) {
+    if (index < workoutListNotifier.value.length) {
+      workoutListNotifier.value[index].isChecked = newValue;
       notifyListeners();
     }
   }
+
 
 }
